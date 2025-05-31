@@ -42,7 +42,7 @@ const Login = () => {
             {/* Toggle Tabs */}
             <div className="flex bg-white/5 rounded-xl sm:rounded-2xl p-1 mb-6 sm:mb-8">
               <button
-                onClick={() => setIsSignIn(true)}
+                onClick={toggleMode}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   isSignIn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
@@ -52,7 +52,7 @@ const Login = () => {
                 Sign In
               </button>
               <button
-                onClick={() => setIsSignIn(false)}
+                onClick={toggleMode}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   !isSignIn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
