@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Header } from "./Header";
+import { checkValidData } from "../utils/Validate";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -11,15 +12,84 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState("");
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    fullName: "",
+  });
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      fullName: "",
+    };
+
+    // Email validation
+    const emailValidation = checkValidData(formData.email, formData.password);
+    if (emailValidation === "Email ID is not valid") {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (emailValidation === "Password is not valid") {
+      newErrors.password =
+        "Password must be 8+ characters with uppercase, lowercase, and number";
+    }
+
+    // Sign up specific validations
+    if (!isSignIn) {
+      // Full name validation
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = "Full name is required";
+      } else if (formData.fullName.trim().length < 2) {
+        newErrors.fullName = "Full name must be at least 2 characters";
+      }
+
+      // Confirm password validation
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = "Please confirm your password";
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
+      }
+    }
+
+    // Basic required field validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+      // Handle successful submission here
+      console.log("Form submitted successfully:", formData);
+    }, 2000);
   };
 
   const toggleMode = () => {
@@ -31,6 +101,16 @@ const Login = () => {
       fullName: "",
     });
     setFocusedField("");
+    setErrors({
+      email: "",
+      password: "",
+      confirmPassword: "",
+      fullName: "",
+    });
+  };
+
+  const handleButtonClick = () => {
+    // This will be handled by form submission
   };
 
   return (
@@ -42,7 +122,7 @@ const Login = () => {
             {/* Toggle Tabs */}
             <div className="flex bg-white/5 rounded-xl sm:rounded-2xl p-1 mb-6 sm:mb-8">
               <button
-                onClick={toggleMode}
+                onClick={() => !isSignIn && toggleMode()}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   isSignIn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
@@ -52,7 +132,7 @@ const Login = () => {
                 Sign In
               </button>
               <button
-                onClick={toggleMode}
+                onClick={() => isSignIn && toggleMode()}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   !isSignIn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
@@ -88,14 +168,36 @@ const Login = () => {
                     onFocus={() => setFocusedField("fullName")}
                     onBlur={() => setFocusedField("")}
                     placeholder="Full name"
-                    className="w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b border-white/30 text-white placeholder-white/50 focus:outline-none focus:border-white transition-all duration-300 text-sm sm:text-base font-light"
+                    className={`w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b transition-all duration-300 text-sm sm:text-base font-light text-white placeholder-white/50 focus:outline-none ${
+                      errors.fullName
+                        ? "border-red-500/70 focus:border-red-400"
+                        : "border-white/30 focus:border-white"
+                    }`}
                     required
                   />
                   <div
-                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${
-                      focusedField === "fullName" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                      errors.fullName
+                        ? "bg-gradient-to-r from-red-500 to-red-400"
+                        : "bg-gradient-to-r from-blue-400 to-purple-500"
+                    } ${focusedField === "fullName" ? "w-full" : "w-0"}`}
                   ></div>
+                  {errors.fullName && (
+                    <p className="text-[11px] sm:text-xs text-red-400/90 mt-2 ml-0.5 flex items-center">
+                      <svg
+                        className="w-3 h-3 mr-1 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      {errors.fullName}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -108,14 +210,38 @@ const Login = () => {
                   onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField("")}
                   placeholder="Email address"
-                  className="w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b border-white/30 text-white placeholder-white/50 focus:outline-none focus:border-white transition-all duration-300 text-sm sm:text-base font-light"
+                  className={`w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b transition-all duration-300 text-sm sm:text-base font-light text-white placeholder-white/50 focus:outline-none ${
+                    errors.email
+                      ? "border-red-500/70 focus:border-red-400"
+                      : "border-white/30 focus:border-white"
+                  }`}
                   required
                 />
                 <div
-                  className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${
-                    focusedField === "email" ? "w-full" : "w-0"
+                  className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                    errors.email
+                      ? ""
+                      : `bg-gradient-to-r from-blue-400 to-purple-500 ${
+                          focusedField === "email" ? "w-full" : "w-0"
+                        }`
                   }`}
                 ></div>
+                {errors.email && (
+                  <p className="text-[11px] sm:text-xs text-red-400/90 mt-2 ml-0.5 flex items-center">
+                    <svg
+                      className="w-3 h-3 mr-1 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               {/* Password Field */}
@@ -129,14 +255,38 @@ const Login = () => {
                   onFocus={() => setFocusedField("password")}
                   onBlur={() => setFocusedField("")}
                   placeholder="Password"
-                  className="w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b border-white/30 text-white placeholder-white/50 focus:outline-none focus:border-white transition-all duration-300 text-sm sm:text-base font-light"
+                  className={`w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b transition-all duration-300 text-sm sm:text-base font-light text-white placeholder-white/50 focus:outline-none ${
+                    errors.password
+                      ? "border-red-500/70 focus:border-red-400"
+                      : "border-white/30 focus:border-white"
+                  }`}
                   required
                 />
                 <div
-                  className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${
-                    focusedField === "password" ? "w-full" : "w-0"
+                  className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                    errors.password
+                      ? ""
+                      : `bg-gradient-to-r from-blue-400 to-purple-500 ${
+                          focusedField === "password" ? "w-full" : "w-0"
+                        }`
                   }`}
                 ></div>
+                {errors.password && (
+                  <p className="text-[11px] sm:text-xs text-red-400/90 mt-2 ml-0.5 flex items-center">
+                    <svg
+                      className="w-3 h-3 mr-1 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {errors.password}
+                  </p>
+                )}
               </div>
 
               {/* Confirm Password Field - Only for Sign Up */}
@@ -151,14 +301,36 @@ const Login = () => {
                     onFocus={() => setFocusedField("confirmPassword")}
                     onBlur={() => setFocusedField("")}
                     placeholder="Confirm password"
-                    className="w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b border-white/30 text-white placeholder-white/50 focus:outline-none focus:border-white transition-all duration-300 text-sm sm:text-base font-light"
+                    className={`w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b transition-all duration-300 text-sm sm:text-base font-light text-white placeholder-white/50 focus:outline-none ${
+                      errors.confirmPassword
+                        ? "border-red-500/70 focus:border-red-400"
+                        : "border-white/30 focus:border-white"
+                    }`}
                     required
                   />
                   <div
-                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${
-                      focusedField === "confirmPassword" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                      errors.confirmPassword
+                        ? "bg-gradient-to-r from-red-500 to-red-400"
+                        : "bg-gradient-to-r from-blue-400 to-purple-500"
+                    } ${focusedField === "confirmPassword" ? "w-full" : "w-0"}`}
                   ></div>
+                  {errors.confirmPassword && (
+                    <p className="text-[11px] sm:text-xs text-red-400/90 mt-2 ml-0.5 flex items-center">
+                      <svg
+                        className="w-3 h-3 mr-1 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -167,6 +339,7 @@ const Login = () => {
                 type="submit"
                 disabled={isLoading}
                 className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
+                onClick={handleButtonClick}
               >
                 {/* Button glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
