@@ -506,19 +506,19 @@ const Login = () => {
               <div className="mt-6 sm:mt-8">
                 <p className="text-white/50 text-[11px] sm:text-xs text-center leading-relaxed">
                   By creating an account, you agree to our{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to="/terms"
                     className="text-white/70 hover:text-white transition-colors underline"
                   >
                     Terms of Service
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to="/terms"
                     className="text-white/70 hover:text-white transition-colors underline"
                   >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </p>
               </div>
             )}
