@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Header } from "./Header";
 import { auth } from "../utils/Firebase";
 import { checkValidData } from "../utils/Validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -91,26 +94,67 @@ const Login = () => {
     try {
       if (!isSignIn) {
         // Sign Up
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         console.log("User created successfully:", userCredential.user);
       } else {
         // Sign In
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         console.log("User signed in successfully:", userCredential.user);
-        // You can handle successful sign-in here (e.g., redirect to dashboard)
       }
     } catch (error) {
-      console.error("Authentication error:", error);
-      // Updated error handling for both sign-in and sign-up cases
-      setErrors((prev) => ({
-        ...prev,
-        email: 
-          error.code === "auth/email-already-in-use" ? "Email already in use" :
-          error.code === "auth/user-not-found" ? "No account found with this email" : "",
-        password:
-          error.code === "auth/weak-password" ? "Password should be at least 6 characters" :
-          error.code === "auth/wrong-password" ? "Invalid password" : "",
-      }));
+      console.error("Authentication error:", error.code);
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setErrors((prev) => ({
+            ...prev,
+            email: "Email is already registered",
+          }));
+          break;
+        case "auth/user-not-found":
+          setErrors((prev) => ({
+            ...prev,
+            email: "No account found with this email",
+          }));
+          break;
+        case "auth/wrong-password":
+          setErrors((prev) => ({ ...prev, password: "Incorrect password" }));
+          break;
+        case "auth/weak-password":
+          setErrors((prev) => ({
+            ...prev,
+            password: "Password should be at least 6 characters",
+          }));
+          break;
+        case "auth/invalid-email":
+          setErrors((prev) => ({ ...prev, email: "Invalid email address" }));
+          break;
+        case "auth/too-many-requests":
+          setErrors((prev) => ({
+            ...prev,
+            email: "Too many failed attempts. Please try again later",
+          }));
+          break;
+        case "auth/network-request-failed":
+          setErrors((prev) => ({
+            ...prev,
+            email: "Network error. Please check your internet connection",
+          }));
+          break;
+        default:
+          setErrors((prev) => ({
+            ...prev,
+            email: "An error occurred. Please try again",
+          }));
+      }
     } finally {
       setIsLoading(false);
     }

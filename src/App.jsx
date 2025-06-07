@@ -1,8 +1,14 @@
-import React from "react";
-import Body from "./components/Body";
+import { Provider } from "react-redux";
+import { RouterProvider } from "react-router-dom";
+import appStore from "./utils/AppStore";
+import { appRouter } from "./utils/Router";
 
 const App = () => {
-  return <Body />;
+  return (
+    <Provider store={appStore}>
+      <RouterProvider router={appRouter} />
+    </Provider>
+  );
 };
 
 export default App;
