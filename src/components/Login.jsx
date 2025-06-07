@@ -5,9 +5,17 @@ import { checkValidData } from "../utils/Validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/UserSlice";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -157,6 +165,31 @@ const Login = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      dispatch(
+        addUser({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+        })
+      );
+
+      navigate("/browse");
+    } catch (error) {
+      console.error("Google Sign In Error:", error);
+      setErrors((prev) => ({
+        ...prev,
+        email: error.message,
+      }));
     }
   };
 
@@ -425,7 +458,6 @@ const Login = () => {
             {/* Sign In Only Features */}
             {isSignIn && (
               <>
-                {/* Divider */}
                 <div className="flex items-center my-6 sm:my-8">
                   <div className="flex-1 h-px bg-white/20"></div>
                   <span className="px-4 text-white/50 text-xs sm:text-sm">
@@ -434,9 +466,11 @@ const Login = () => {
                   <div className="flex-1 h-px bg-white/20"></div>
                 </div>
 
-                {/* Social Login Options */}
-                <div className="space-y-3">
-                  <button className="w-full py-2 sm:py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white rounded-lg sm:rounded-xl transition-all duration-300 flex items-center justify-center group text-xs sm:text-sm">
+                <div>
+                  <button
+                    onClick={handleGoogleSignIn}
+                    className="w-full py-2 sm:py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white rounded-lg sm:rounded-xl transition-all duration-300 flex items-center justify-center group text-xs sm:text-sm"
+                  >
                     <svg
                       className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
                       viewBox="0 0 24 24"
@@ -461,19 +495,6 @@ const Login = () => {
                     </svg>
                     <span className="group-hover:text-white/90 transition-colors">
                       Continue with Google
-                    </span>
-                  </button>
-
-                  <button className="w-full py-2 sm:py-2.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white rounded-lg sm:rounded-xl transition-all duration-300 flex items-center justify-center group text-xs sm:text-sm">
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                    <span className="group-hover:text-white/90 transition-colors">
-                      Continue with Facebook
                     </span>
                   </button>
                 </div>
@@ -505,12 +526,12 @@ const Login = () => {
             {/* Footer Links */}
             <div className="mt-6 sm:mt-8 text-center space-y-2 sm:space-y-3">
               {isSignIn && (
-                <a
-                  href="#"
+                <Link
+                  to="/forgot-password"
                   className="block text-white/50 hover:text-white/70 text-[11px] sm:text-xs transition-colors"
                 >
                   Forgot your password?
-                </a>
+                </Link>
               )}
             </div>
           </div>
