@@ -26,9 +26,9 @@ const PrivacyPolicy = () => {
                   1. Information We Collect
                 </h2>
                 <p>
-                  We collect information you provide directly, including account details
-                  and viewing preferences. We also automatically collect usage data to
-                  enhance your streaming experience.
+                  We collect information you provide directly, including account
+                  details and viewing preferences. We also automatically collect
+                  usage data to enhance your streaming experience.
                 </p>
               </section>
 
@@ -38,8 +38,8 @@ const PrivacyPolicy = () => {
                 </h2>
                 <p>
                   Your information helps us personalize content recommendations,
-                  improve our service, and communicate with you about new features
-                  and updates.
+                  improve our service, and communicate with you about new
+                  features and updates.
                 </p>
               </section>
 
@@ -48,8 +48,9 @@ const PrivacyPolicy = () => {
                   3. Data Security
                 </h2>
                 <p>
-                  We implement industry-standard security measures to protect your
-                  personal information from unauthorized access, disclosure, or misuse.
+                  We implement industry-standard security measures to protect
+                  your personal information from unauthorized access,
+                  disclosure, or misuse.
                 </p>
               </section>
 
@@ -59,8 +60,8 @@ const PrivacyPolicy = () => {
                 </h2>
                 <p>
                   We maintain your viewing history to provide personalized
-                  recommendations and resume playback features. You can manage or
-                  delete this data from your account settings.
+                  recommendations and resume playback features. You can manage
+                  or delete this data from your account settings.
                 </p>
               </section>
 
@@ -69,9 +70,9 @@ const PrivacyPolicy = () => {
                   5. Third-Party Services
                 </h2>
                 <p>
-                  We may use third-party services for analytics and content delivery.
-                  These services are bound by confidentiality agreements and our
-                  privacy standards.
+                  We may use third-party services for analytics and content
+                  delivery. These services are bound by confidentiality
+                  agreements and our privacy standards.
                 </p>
               </section>
 
