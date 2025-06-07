@@ -3,7 +3,8 @@ import Login from "../components/Login";
 import Browse from "../components/Browse";
 import Layout from "../components/Layout";
 import ForgotPassword from "../components/ForgotPassword";
-import TermsOfService from "../components/TermsOfService.jsx";
+import TermsOfService from "../components/TermsOfService";
+import PrivacyPolicy from "../components/PrivacyPolicy";
 
 export const appRouter = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const appRouter = createBrowserRouter([
       {
         path: "/terms",
         element: <TermsOfService />,
+      },
+      {
+        path: "/privacy",
+        element: <PrivacyPolicy />,
       },
     ],
   },

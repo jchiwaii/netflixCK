@@ -514,7 +514,7 @@ const Login = () => {
                   </Link>{" "}
                   and{" "}
                   <Link
-                    to="/terms"
+                    to="/privacy"
                     className="text-white/70 hover:text-white transition-colors underline"
                   >
                     Privacy Policy
