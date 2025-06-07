@@ -5,22 +5,22 @@ const TermsOfService = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
-      <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        <div className="w-full max-w-2xl my-8">
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
+    <div className="absolute inset-0 -z-10 h-full w-full items-center px-4 sm:px-5 py-20 sm:py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+      <div className="fixed inset-0 flex items-start sm:items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="w-full max-w-2xl my-4 sm:my-8">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-2xl">
             {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-xl sm:text-2xl font-light text-white mb-2 tracking-wide">
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-base sm:text-lg font-light text-white mb-2 tracking-wide">
                 Terms of Service
               </h1>
-              <p className="text-white/60 text-xs sm:text-sm">
+              <p className="text-white/60 text-[10px] sm:text-[11px]">
                 Last updated: June 7, 2025
               </p>
             </div>
 
             {/* Content */}
-            <div className="space-y-6 text-white/70 text-sm sm:text-base font-light">
+            <div className="space-y-4 sm:space-y-6 text-white/70 text-[12px] sm:text-[13px] font-light">
               <section className="space-y-3">
                 <h2 className="text-white text-lg font-medium mb-2">
                   1. Streaming Service
@@ -76,25 +76,18 @@ const TermsOfService = () => {
                   acceptance of the new terms.
                 </p>
               </section>
+            </div>
 
-              {/* Back Button */}
-              <div className="pt-4 border-t border-white/10">
-                <button
-                  onClick={() => navigate(-1)}
-                  className="w-full py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-xs sm:text-sm"
-                >
-                  I Understand
-                </button>
-              </div>
+            {/* Back Button */}
+            <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-white/10">
+              <button
+                onClick={() => navigate(-1)}
+                className="w-full py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] text-[11px] sm:text-xs"
+              >
+                I Understand
+              </button>
             </div>
           </div>
-
-          {/* Floating Elements */}
-          <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse" />
-          <div
-            className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/10 to-blue-400/10 rounded-full blur-2xl animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
         </div>
       </div>
     </div>
