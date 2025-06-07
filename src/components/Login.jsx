@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Header } from "./Header";
+import { auth } from "../utils/Firebase";
 import { checkValidData } from "../utils/Validate";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -76,20 +78,42 @@ const Login = () => {
     return Object.values(newErrors).every((error) => error === "");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const { email, password } = formData;
 
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      if (!isSignIn) {
+        // Sign Up
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User created successfully:", userCredential.user);
+      } else {
+        // Sign In
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("User signed in successfully:", userCredential.user);
+        // You can handle successful sign-in here (e.g., redirect to dashboard)
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      // Updated error handling for both sign-in and sign-up cases
+      setErrors((prev) => ({
+        ...prev,
+        email: 
+          error.code === "auth/email-already-in-use" ? "Email already in use" :
+          error.code === "auth/user-not-found" ? "No account found with this email" : "",
+        password:
+          error.code === "auth/weak-password" ? "Password should be at least 6 characters" :
+          error.code === "auth/wrong-password" ? "Invalid password" : "",
+      }));
+    } finally {
       setIsLoading(false);
-      // Handle successful submission here
-      console.log("Form submitted successfully:", formData);
-    }, 2000);
+    }
   };
 
   const toggleMode = () => {
@@ -107,10 +131,6 @@ const Login = () => {
       confirmPassword: "",
       fullName: "",
     });
-  };
-
-  const handleButtonClick = () => {
-    // This will be handled by form submission
   };
 
   return (
@@ -339,7 +359,6 @@ const Login = () => {
                 type="submit"
                 disabled={isLoading}
                 className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
-                onClick={handleButtonClick}
               >
                 {/* Button glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
