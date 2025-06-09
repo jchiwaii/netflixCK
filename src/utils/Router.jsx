@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import ForgotPassword from "../components/ForgotPassword";
 import TermsOfService from "../components/TermsOfService";
 import PrivacyPolicy from "../components/PrivacyPolicy";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const appRouter = createBrowserRouter([
   {
@@ -17,7 +18,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "/browse",
-        element: <Browse />,
+        element: (
+          <ProtectedRoute>
+            <Browse />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/forgot-password",
