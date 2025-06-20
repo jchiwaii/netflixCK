@@ -13,6 +13,8 @@ const MainContainer = () => {
   
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   // Early return if no data
   if (!popularMovies || popularMovies.length === 0) {
@@ -50,63 +52,103 @@ const MainContainer = () => {
   // Get dynamic genre names
   const genreNames = getGenreNames(genre_ids, genres);
 
+  // Handle initial load animation - only start after image loads
+  useEffect(() => {
+    if (imageLoaded && isInitialLoad) {
+      const timer = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 300); // Delay to ensure smooth entrance
+      
+      return () => clearTimeout(timer);
+    }
+  }, [imageLoaded, isInitialLoad]);
+
+  // Reset image loaded state when movie changes
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [currentMovieIndex]);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
   const goToMovie = (index) => {
     if (index === currentMovieIndex || isTransitioning) return;
     
     setIsTransitioning(true);
+    setImageLoaded(false); // Reset for new image
     
-    // Synchronized transition - both image and text change together
+    // Synchronized transition
     setTimeout(() => {
       setCurrentMovieIndex(index);
       setIsTransitioning(false);
-    }, 1000); // Match this with CSS transition duration
+    }, 1200);
   };
 
-  // Auto-scroll effect with synchronized transitions
+  // Auto-scroll effect
   useEffect(() => {
+    if (isInitialLoad || !imageLoaded) return;
+    
     const interval = setInterval(() => {
       const nextIndex = (currentMovieIndex + 1) % 3;
       goToMovie(nextIndex);
-    }, 7000);
+    }, 8000); // Increased interval
 
     return () => clearInterval(interval);
-  }, [currentMovieIndex]);
+  }, [currentMovieIndex, isInitialLoad, imageLoaded]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Background Images with synchronized crossfade */}
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      {/* Background Images with proper entrance animation */}
       <div className="absolute inset-0 z-0">
         <img
-          key={currentMovieIndex} // This ensures image changes with content
+          key={currentMovieIndex}
           src={IMG_CDN_URL_ORIGINAL + backdrop_path}
           alt={title}
-          className={`w-full h-full object-cover transform transition-all duration-1000 ease-in-out ${
-            isTransitioning 
-              ? 'scale-110 opacity-0 blur-sm' 
-              : 'scale-105 opacity-100 blur-0'
+          onLoad={handleImageLoad}
+          className={`w-full h-full object-cover transform transition-all duration-1500 ease-out ${
+            !imageLoaded || isInitialLoad
+              ? 'scale-125 opacity-0 blur-xl' // Start completely hidden
+              : isTransitioning 
+                ? 'scale-120 opacity-0 blur-lg' // Transition out
+                : 'scale-105 opacity-100 blur-0' // Final visible state
           }`}
         />
         
-        {/* Synchronized overlays */}
-        <div className={`absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent transition-opacity duration-1000 ${
-          isTransitioning ? 'opacity-60' : 'opacity-80'
+        {/* Overlays with coordinated animation */}
+        <div className={`absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent transition-all duration-1500 ease-out ${
+          !imageLoaded || isInitialLoad
+            ? 'opacity-100' // Keep overlay strong initially
+            : isTransitioning 
+              ? 'opacity-70' 
+              : 'opacity-85'
         }`}></div>
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40 transition-opacity duration-1000 ${
-          isTransitioning ? 'opacity-60' : 'opacity-100'
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/50 transition-all duration-1500 ease-out ${
+          !imageLoaded || isInitialLoad
+            ? 'opacity-100'
+            : isTransitioning 
+              ? 'opacity-70' 
+              : 'opacity-100'
         }`}></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-purple-900/20 transition-opacity duration-1000"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-purple-900/30 transition-all duration-1800 ease-out ${
+          !imageLoaded || isInitialLoad ? 'opacity-0' : 'opacity-100'
+        }`}></div>
       </div>
 
-      {/* Synchronized Content */}
+      {/* Content with staggered entrance */}
       <div className="relative z-10 h-full flex items-center">
-        <div className={`px-6 sm:px-12 max-w-4xl transition-all duration-1000 ease-in-out transform ${
-          isTransitioning 
-            ? 'translate-x-12 opacity-0 blur-sm scale-95' 
-            : 'translate-x-0 opacity-100 blur-0 scale-100'
+        <div className={`px-6 sm:px-12 max-w-4xl transition-all duration-1400 ease-out transform ${
+          !imageLoaded || isInitialLoad
+            ? 'translate-x-20 opacity-0 blur-md scale-90'
+            : isTransitioning 
+              ? 'translate-x-16 opacity-0 blur-sm scale-95'
+              : 'translate-x-0 opacity-100 blur-0 scale-100'
         }`}>
           
           {/* Movie Metadata */}
-          <div className="mb-6">
+          <div className={`mb-6 transition-all duration-1600 ease-out delay-300 transform ${
+            !imageLoaded || isInitialLoad ? 'translate-y-12 opacity-0' : 'translate-y-0 opacity-100'
+          }`}>
             <div className="flex flex-wrap items-center gap-4 text-white/80 text-sm font-medium">
               <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
                 <span>{getYear(release_date)}</span>
@@ -121,7 +163,9 @@ const MainContainer = () => {
           </div>
 
           {/* Rating and Genres */}
-          <div className="flex items-center space-x-6 mb-8">
+          <div className={`flex items-center space-x-6 mb-8 transition-all duration-1600 ease-out delay-500 transform ${
+            !imageLoaded || isInitialLoad ? 'translate-y-12 opacity-0' : 'translate-y-0 opacity-100'
+          }`}>
             <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm px-4 py-2 rounded-full border border-yellow-300/30">
               <span className="text-yellow-400 text-xl animate-pulse">★</span>
               <span className="text-white font-bold text-lg">
@@ -137,28 +181,36 @@ const MainContainer = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white mb-8 leading-[0.9]">
+          <h1 className={`text-4xl sm:text-6xl lg:text-7xl font-black text-white mb-6 leading-[0.9] transition-all duration-1700 ease-out delay-700 transform ${
+            !imageLoaded || isInitialLoad ? 'translate-y-16 opacity-0 scale-90' : 'translate-y-0 opacity-100 scale-100'
+          }`}>
             <span className="bg-gradient-to-r from-white via-white to-gray-300 text-transparent bg-clip-text drop-shadow-2xl">
               {title}
             </span>
           </h1>
 
-          {/* Overview */}
+          {/* Overview - Reduced font size to show full text */}
           {overview && (
-            <p className="text-white/90 text-lg sm:text-xl mb-10 leading-relaxed max-w-3xl font-light">
-              {overview.length > 180 ? `${overview.substring(0, 180)}...` : overview}
+            <p className={`text-white/90 text-base sm:text-lg mb-8 leading-relaxed max-w-4xl font-light transition-all duration-1600 ease-out delay-900 transform ${
+              !imageLoaded || isInitialLoad ? 'translate-y-12 opacity-0' : 'translate-y-0 opacity-100'
+            }`}>
+              {overview} {/* Show full overview without truncation */}
             </p>
           )}
 
           {/* Release Date */}
-          <div className="mb-10">
+          <div className={`mb-10 transition-all duration-1600 ease-out delay-1100 transform ${
+            !imageLoaded || isInitialLoad ? 'translate-y-12 opacity-0' : 'translate-y-0 opacity-100'
+          }`}>
             <p className="text-white/60 text-base bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 inline-block">
               🗓️ Released: {formatReleaseDate(release_date)}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center space-x-5">
+          <div className={`flex items-center space-x-5 transition-all duration-1700 ease-out delay-1300 transform ${
+            !imageLoaded || isInitialLoad ? 'translate-y-16 opacity-0 scale-85' : 'translate-y-0 opacity-100 scale-100'
+          }`}>
             <button className="group flex items-center px-10 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-full transition-all duration-500 transform hover:scale-110 hover:shadow-2xl hover:shadow-red-500/30 active:scale-95">
               <svg className="w-6 h-6 mr-3 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
@@ -182,20 +234,21 @@ const MainContainer = () => {
         </div>
       </div>
 
-      {/* Main Navigation Dots Only */}
-      <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
+      {/* Navigation Dots */}
+      <div className={`absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20 transition-all duration-1800 ease-out delay-1500 ${
+        !imageLoaded || isInitialLoad ? 'translate-y-12 opacity-0' : 'translate-y-0 opacity-100'
+      }`}>
         {[0, 1, 2].map((index) => (
           <button
             key={index}
             onClick={() => goToMovie(index)}
-            disabled={isTransitioning}
+            disabled={isTransitioning || isInitialLoad || !imageLoaded}
             className={`relative transition-all duration-700 ease-out transform ${
               index === currentMovieIndex
                 ? "w-16 h-3 bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/50 scale-100"
                 : "w-10 h-3 bg-white/30 hover:bg-white/50 hover:scale-110 active:scale-95"
             } rounded-full overflow-hidden`}
           >
-            {/* Active dot progress animation */}
             {index === currentMovieIndex && (
               <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent animate-pulse rounded-full"></div>
             )}
@@ -203,8 +256,10 @@ const MainContainer = () => {
         ))}
       </div>
 
-      {/* Floating particles effect */}
-      <div className="absolute inset-0 pointer-events-none z-5">
+      {/* Floating particles */}
+      <div className={`absolute inset-0 pointer-events-none z-5 transition-opacity duration-2500 delay-2000 ${
+        !imageLoaded || isInitialLoad ? 'opacity-0' : 'opacity-100'
+      }`}>
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
