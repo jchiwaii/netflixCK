@@ -10,29 +10,21 @@ import MainContainer from "./MainContainer";
 import SecondaryContainer from "./SecondaryContainer";
 
 const Browse = () => {
-  // Fetch all data
+  // Fetch all data which will be stored in the Redux store
   useNowPlayingMovies();
   usePopularMovies();
   useTopRatedMovies();
   useUpcomingMovies();
   useGenres();
 
-  // Get movies from store
-  const movies = useSelector((store) => store.movies);
-  const { loading, error } = movies;
+  // Get the most critical movie list for the initial render
+  const popularMovies = useSelector((store) => store.movies.popularMovies);
 
-  if (loading) {
+  // Show a loading screen until the critical data is available
+  if (!popularMovies) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-red-400">Error: {error}</p>
+      <div className="absolute inset-0 bg-black flex items-center justify-center z-[200]">
+        <div className="w-12 h-12 border-4 border-white/20 border-t-myflix-red rounded-full animate-spin"></div>
       </div>
     );
   }
