@@ -1,7 +1,8 @@
 // filepath: /Users/user/Desktop/projects/netflixCK/src/components/MovieList.jsx
+import React from "react";
 import MovieCard from "./MovieCard";
 
-const MovieList = ({ title, movies }) => {
+const MovieList = ({ title, movies, onMovieClick }) => {
   if (!movies) return null;
 
   return (
@@ -12,10 +13,12 @@ const MovieList = ({ title, movies }) => {
       <div className="flex overflow-x-scroll scrollbar-hide space-x-4 pb-4">
         <div className="flex space-x-4">
           {movies.map((movie) => (
-            <MovieCard 
-              key={movie.id} 
-              posterPath={movie.poster_path} 
-              title={movie.title} 
+            <MovieCard
+              key={movie.id}
+              movieId={movie.id}
+              posterPath={movie.poster_path}
+              title={movie.title}
+              onClick={onMovieClick}
             />
           ))}
         </div>

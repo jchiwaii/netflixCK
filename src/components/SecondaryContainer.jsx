@@ -1,9 +1,13 @@
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import MovieList from "./MovieList";
 import Trending from "./Trending";
+import VideoPlayer from "./VideoPlayer";
 
 const SecondaryContainer = () => {
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
   const movies = useSelector((store) => store.movies);
+
   const {
     nowPlayingMovies,
     popularMovies,
@@ -13,6 +17,14 @@ const SecondaryContainer = () => {
     selectedGenre,
     genres,
   } = movies;
+
+  const handleMovieClick = (movieId) => {
+    setSelectedMovieId(movieId);
+    const videoSection = document.getElementById("video-player-section");
+    if (videoSection) {
+      videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   const selectedGenreName =
     genres && selectedGenre
@@ -27,13 +39,32 @@ const SecondaryContainer = () => {
           <MovieList
             title={selectedGenreName}
             movies={filteredMovies}
-            isGenreList
+            onMovieClick={handleMovieClick}
           />
         )}
-        <MovieList title={"Now Playing"} movies={nowPlayingMovies} />
-        <MovieList title={"Top Rated Movies"} movies={topRatedMovies} />
-        <MovieList title={"Popular"} movies={popularMovies} />
-        <MovieList title={"Upcoming Movies"} movies={upcomingMovies} />
+        <MovieList
+          title={"Now Playing"}
+          movies={nowPlayingMovies}
+          onMovieClick={handleMovieClick}
+        />
+        <div id="video-player-section">
+          <VideoPlayer selectedMovieId={selectedMovieId} />
+        </div>
+        <MovieList
+          title={"Top Rated Movies"}
+          movies={topRatedMovies}
+          onMovieClick={handleMovieClick}
+        />
+        <MovieList
+          title={"Popular"}
+          movies={popularMovies}
+          onMovieClick={handleMovieClick}
+        />
+        <MovieList
+          title={"Upcoming Movies"}
+          movies={upcomingMovies}
+          onMovieClick={handleMovieClick}
+        />
       </div>
     </div>
   );

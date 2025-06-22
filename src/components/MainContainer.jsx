@@ -4,12 +4,11 @@ import { IMG_CDN_URL_ORIGINAL } from "../utils/Constants";
 import { getGenreNames } from "../utils/GenreUtils";
 import { formatReleaseDate, getYear } from "../utils/DateUtils";
 
-const MainContainer = () => {
+const MainContainer = ({ currentMovieIndex, setCurrentMovieIndex }) => {
   // Select state individually to prevent unnecessary re-renders
   const popularMovies = useSelector((store) => store.movies.popularMovies);
   const genres = useSelector((store) => store.movies.genres);
 
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -150,7 +149,7 @@ const MainContainer = () => {
               : "translate-x-0 opacity-100 blur-0 scale-100"
           }`}
         >
-          {/* Responsive Movie Metadata */}
+          {/* Movie Metadata */}
           <div
             className={`mb-4 sm:mb-6 transition-all duration-1600 ease-out delay-300 transform ${
               !imageLoaded || isInitialLoad
@@ -173,7 +172,7 @@ const MainContainer = () => {
             </div>
           </div>
 
-          {/* Responsive Rating and Genres */}
+          {/* Rating and Genres */}
           <div
             className={`flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 mb-6 sm:mb-8 transition-all duration-1600 ease-out delay-500 transform ${
               !imageLoaded || isInitialLoad
@@ -197,7 +196,7 @@ const MainContainer = () => {
             </div>
           </div>
 
-          {/* Responsive Title */}
+          {/* Title */}
           <h1
             className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-4 sm:mb-6 leading-[0.9] transition-all duration-1700 ease-out delay-700 transform ${
               !imageLoaded || isInitialLoad
@@ -210,7 +209,7 @@ const MainContainer = () => {
             </span>
           </h1>
 
-          {/* Responsive Overview */}
+          {/* Overview */}
           {overview && (
             <p
               className={`text-white/90 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed max-w-full font-light transition-all duration-1600 ease-out delay-900 transform ${
@@ -219,7 +218,6 @@ const MainContainer = () => {
                   : "translate-y-0 opacity-100"
               }`}
             >
-              {/* Truncate overview on smaller screens */}
               <span className="block sm:hidden">
                 {overview.length > 120
                   ? `${overview.substring(0, 120)}...`
@@ -234,7 +232,7 @@ const MainContainer = () => {
             </p>
           )}
 
-          {/* Responsive Release Date */}
+          {/* Release Date */}
           <div
             className={`mb-6 sm:mb-10 transition-all duration-1600 ease-out delay-1100 transform ${
               !imageLoaded || isInitialLoad
@@ -247,7 +245,7 @@ const MainContainer = () => {
             </p>
           </div>
 
-          {/* Responsive Action Buttons */}
+          {/* Action Buttons */}
           <div
             className={`flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 lg:space-x-5 transition-all duration-1700 ease-out delay-1300 transform ${
               !imageLoaded || isInitialLoad
@@ -255,7 +253,7 @@ const MainContainer = () => {
                 : "translate-y-0 opacity-100 scale-100"
             }`}
           >
-            {/* Primary Watch Button */}
+            {/* Watch Button */}
             <button className="group flex items-center justify-center px-6 sm:px-8 lg:px-10 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-full transition-all duration-500 transform hover:scale-105 sm:hover:scale-110 hover:shadow-2xl hover:shadow-red-500/30 active:scale-95 w-full sm:w-auto">
               <svg
                 className="w-4 h-4 sm:w-5 lg:w-6 mr-2 sm:mr-3 transition-transform duration-300 group-hover:scale-110"
@@ -265,13 +263,12 @@ const MainContainer = () => {
                 <path d="M8 5v14l11-7z" />
               </svg>
               <span className="font-semibold text-sm sm:text-base lg:text-lg">
-                Watch Now
+                Watch Trailer
               </span>
             </button>
 
-            {/* Secondary Buttons Container */}
+            {/* Secondary Buttons */}
             <div className="flex space-x-3 w-full sm:w-auto">
-              {/* More Info Button */}
               <button className="group flex items-center justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-white/40 text-white rounded-full transition-all duration-500 transform hover:scale-105 hover:shadow-xl flex-1 sm:flex-none">
                 <svg
                   className="w-4 h-4 sm:w-5 lg:w-6 mr-2 sm:mr-3 transition-transform duration-300 group-hover:rotate-12"
@@ -292,7 +289,6 @@ const MainContainer = () => {
                 <span className="font-medium text-sm sm:hidden">Info</span>
               </button>
 
-              {/* Like Button */}
               <button className="group p-3 sm:p-4 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-pink-300/50 text-white rounded-full transition-all duration-500 transform hover:scale-110 hover:shadow-lg">
                 <svg
                   className="w-4 h-4 sm:w-5 lg:w-6 transition-all duration-300 group-hover:fill-pink-400 group-hover:scale-110"
@@ -313,7 +309,7 @@ const MainContainer = () => {
         </div>
       </div>
 
-      {/* Responsive Navigation Dots */}
+      {/* Navigation Dots */}
       <div
         className={`absolute bottom-8 sm:bottom-12 lg:bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-4 z-20 transition-all duration-1800 ease-out delay-1500 ${
           !imageLoaded || isInitialLoad
@@ -339,7 +335,7 @@ const MainContainer = () => {
         ))}
       </div>
 
-      {/* Floating particles - Hidden on mobile for performance */}
+      {/* Floating particles */}
       <div
         className={`absolute inset-0 pointer-events-none z-5 transition-opacity duration-2500 delay-2000 hidden sm:block ${
           !imageLoaded || isInitialLoad ? "opacity-0" : "opacity-100"
