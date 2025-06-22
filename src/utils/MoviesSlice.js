@@ -9,6 +9,8 @@ const moviesSlice = createSlice({
     upcomingMovies: null,
     movieImages: null,
     genres: null,
+    filteredMovies: null,
+    selectedGenre: null,
     loading: false,
     error: null,
   },
@@ -31,6 +33,22 @@ const moviesSlice = createSlice({
     addGenres: (state, action) => {
       state.genres = action.payload;
     },
+    filterMoviesByGenre: (state, action) => {
+      const genreId = action.payload;
+      state.selectedGenre = genreId;
+      const allMovies = [
+        ...(state.nowPlayingMovies || []),
+        ...(state.popularMovies || []),
+        ...(state.topRatedMovies || []),
+        ...(state.upcomingMovies || []),
+      ];
+      const uniqueMovies = Array.from(
+        new Map(allMovies.map((movie) => [movie.id, movie])).values()
+      );
+      state.filteredMovies = uniqueMovies.filter((movie) =>
+        movie.genre_ids.includes(genreId)
+      );
+    },
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -47,6 +65,7 @@ export const {
   addUpcomingMovies,
   addMovieImages,
   addGenres,
+  filterMoviesByGenre,
   setLoading,
   setError,
 } = moviesSlice.actions;
