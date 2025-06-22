@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../utils/Firebase";
-import { addUser, removeUser } from "../utils/UserSlice";
+import { auth } from "../utils/firebase";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
-  const [isMyListOpen, setIsMyListOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      navigate("/");
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {})
+      .catch((error) => {
+        navigate("/error");
+      });
   };
 
   useEffect(() => {
@@ -43,320 +41,128 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  // Handle navigation to sections
+  const handleNavigation = (section) => {
+    setActiveSection(section);
+
+    if (section === "trending") {
+      // Smooth scroll to trending section
+      const trendingSection = document.getElementById("trending-section");
+      if (trendingSection) {
+        trendingSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else if (section === "home") {
+      // Scroll to top for home
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Listen for scroll to update active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const trendingSection = document.getElementById("trending-section");
+      if (trendingSection) {
+        const rect = trendingSection.getBoundingClientRect();
+        const isInView = rect.top <= 100 && rect.bottom >= 100;
+
+        if (isInView && activeSection !== "trending") {
+          setActiveSection("trending");
+        } else if (
+          !isInView &&
+          window.scrollY < 500 &&
+          activeSection !== "home"
+        ) {
+          setActiveSection("home");
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeSection]);
+
   return (
-    <header
-      className="fixed top-0 z-50 w-full backdrop-blur-sm transition-all duration-300"
-      style={{
-        fontFamily: '"Outfit", sans-serif',
-        background:
-          "linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%)",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
-      }}
-    >
-      <div className="flex w-full items-center px-4 sm:px-8 lg:px-16 py-4 lg:py-5">
-        {/* Logo Section */}
-        <div className="flex items-center space-x-2 lg:space-x-3 group cursor-pointer">
-          <div
-            className="w-7 h-7 lg:w-8 lg:h-8 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110"
-            style={{
-              backgroundColor: "#FF1313",
-              boxShadow: "0 0 20px rgba(255, 19, 19, 0.3)",
-            }}
-          >
-            <svg
-              className="w-3 h-3 lg:w-3.5 lg:h-3.5"
-              fill="white"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <span
-            className="font-medium tracking-wide transition-all duration-300 group-hover:text-opacity-80"
-            style={{
-              color: "white",
-              fontSize: "17px",
-              letterSpacing: "0.5px",
-            }}
-          >
-            myflix
-          </span>
-        </div>
+    <div className="fixed top-0 w-full px-8 py-4 z-50">
+      {/* Sticky glassy navigation */}
+      <div className="flex justify-between items-center bg-black/15 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-3 shadow-2xl transition-all duration-300 hover:bg-black/20">
+        {/* Logo */}
+        <img
+          className="w-32 cursor-pointer transition-transform duration-300 hover:scale-105"
+          src="https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
+          alt="Netflix Logo"
+          onClick={() => handleNavigation("home")}
+        />
 
-        {/* Desktop Navigation Menu */}
-        <nav className="hidden lg:flex items-center flex-1 justify-center ml-16 mr-16">
-          <div className="flex items-center space-x-12">
-            <a
-              href="#"
-              className="relative group transition-all duration-300 hover:scale-105"
-              style={{
-                color: "#FF1313",
-                fontSize: "16px",
-                fontWeight: "500",
-                textDecoration: "none",
-                letterSpacing: "0.3px",
-              }}
-            >
-              Home
-              <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-red-500 to-red-400 rounded-full"></div>
-            </a>
-
-            <a
-              href="#"
-              className="relative group transition-all duration-300 hover:scale-105 hover:text-red-400"
-              style={{
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "400",
-                textDecoration: "none",
-                letterSpacing: "0.3px",
-              }}
-            >
-              Movies
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-red-400 rounded-full transition-all duration-300 group-hover:w-full"></div>
-            </a>
-
-            <a
-              href="#"
-              className="relative group transition-all duration-300 hover:scale-105 hover:text-red-400"
-              style={{
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "400",
-                textDecoration: "none",
-                letterSpacing: "0.3px",
-              }}
-            >
-              Series
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-red-400 rounded-full transition-all duration-300 group-hover:w-full"></div>
-            </a>
-
-            <div className="relative">
+        {user && (
+          <div className="flex items-center space-x-6">
+            {/* Navigation Links */}
+            <nav className="flex items-center space-x-1">
               <button
-                onClick={() => setIsMyListOpen(!isMyListOpen)}
-                className="flex items-center space-x-1 group transition-all duration-300 hover:scale-105 hover:text-red-400"
-                style={{
-                  color: "white",
-                  fontSize: "16px",
-                  fontWeight: "400",
-                  textDecoration: "none",
-                  letterSpacing: "0.3px",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
+                onClick={() => handleNavigation("home")}
+                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+                  activeSection === "home"
+                    ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
+                }`}
               >
-                <span>My List</span>
-                <svg
-                  className={`w-3.5 h-3.5 transition-all duration-300 ${
-                    isMyListOpen ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                Home
               </button>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-red-400 rounded-full transition-all duration-300 group-hover:w-full"></div>
+              <button
+                onClick={() => handleNavigation("trending")}
+                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+                  activeSection === "trending"
+                    ? "bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white border border-red-400/50 shadow-lg shadow-red-500/20"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                Trending
+              </button>
+              <button
+                onClick={() => handleNavigation("movies")}
+                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+                  activeSection === "movies"
+                    ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                Movies
+              </button>
+              <button
+                onClick={() => handleNavigation("series")}
+                className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+                  activeSection === "series"
+                    ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                TV Shows
+              </button>
+            </nav>
+
+            {/* User Section */}
+            <div className="flex items-center space-x-3">
+              <img
+                className="w-8 h-8 rounded-full border-2 border-white/20 transition-transform duration-300 hover:scale-110"
+                alt="User Avatar"
+                src={
+                  user?.photoURL ||
+                  "https://occ-0-6247-2164.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABdpkabKqQAxyWzo6QW_ZnPz1IZLqlmNfK-t4L1VIeV1DY00JhLo_LMVFp936keDxj-V5UELAVJrU--iUUY2MaDxQSSO-0qw.png?r=e6e"
+                }
+              />
+              <button
+                onClick={handleSignOut}
+                className="font-medium text-white hover:text-red-400 transition-colors duration-300 text-sm"
+              >
+                Sign Out
+              </button>
             </div>
           </div>
-        </nav>
-
-        {/* Right Section - User & Mobile Menu */}
-        <div className="flex items-center space-x-3 lg:space-x-5 ml-auto">
-          {/* User Avatar */}
-          <div className="relative group">
-            {user?.photoURL ? (
-              <img
-                src={user.photoURL}
-                alt={user.displayName}
-                className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-red-500 transition-all duration-300 cursor-pointer"
-                style={{
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-                }}
-              />
-            ) : (
-              <div
-                className="w-7 h-7 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-xs lg:text-sm font-medium cursor-pointer ring-2 ring-transparent group-hover:ring-red-500 transition-all duration-300"
-                style={{
-                  backgroundColor: "#333",
-                  color: "white",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-                }}
-              >
-                {user?.displayName?.[0] || user?.email?.[0] || "U"}
-              </div>
-            )}
-          </div>
-
-          {/* Desktop Sign Out Button */}
-          <button
-            onClick={handleSignOut}
-            className="hidden lg:block relative px-4 py-2 rounded-md transition-all duration-300 hover:bg-red-600 hover:shadow-lg group"
-            style={{
-              color: "white",
-              fontSize: "14px",
-              fontWeight: "400",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              cursor: "pointer",
-              letterSpacing: "0.2px",
-            }}
-          >
-            <span className="relative z-10">Sign Out</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-md transition-all duration-300 hover:bg-white hover:bg-opacity-10"
-            style={{
-              color: "white",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            <svg
-              className={`w-6 h-6 transition-all duration-300 ${
-                isMobileMenuOpen ? "rotate-90" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-            >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
+        )}
       </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.95) 100%)",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-        }}
-      >
-        <nav className="px-4 sm:px-8 py-6 space-y-6">
-          <a
-            href="#"
-            className="block transition-all duration-300 hover:text-red-400 hover:translate-x-2"
-            style={{
-              color: "#FF1313",
-              fontSize: "18px",
-              fontWeight: "500",
-              textDecoration: "none",
-              letterSpacing: "0.3px",
-            }}
-          >
-            Home
-          </a>
-
-          <a
-            href="#"
-            className="block transition-all duration-300 hover:text-red-400 hover:translate-x-2"
-            style={{
-              color: "white",
-              fontSize: "18px",
-              fontWeight: "400",
-              textDecoration: "none",
-              letterSpacing: "0.3px",
-            }}
-          >
-            Movies
-          </a>
-
-          <a
-            href="#"
-            className="block transition-all duration-300 hover:text-red-400 hover:translate-x-2"
-            style={{
-              color: "white",
-              fontSize: "18px",
-              fontWeight: "400",
-              textDecoration: "none",
-              letterSpacing: "0.3px",
-            }}
-          >
-            Series
-          </a>
-
-          <button
-            onClick={() => setIsMyListOpen(!isMyListOpen)}
-            className="flex items-center space-x-2 w-full text-left transition-all duration-300 hover:text-red-400 hover:translate-x-2"
-            style={{
-              color: "white",
-              fontSize: "18px",
-              fontWeight: "400",
-              textDecoration: "none",
-              letterSpacing: "0.3px",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            <span>My List</span>
-            <svg
-              className={`w-4 h-4 transition-all duration-300 ${
-                isMyListOpen ? "rotate-180" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-
-          <div className="pt-4 border-t border-gray-700">
-            <button
-              onClick={handleSignOut}
-              className="w-full text-left px-4 py-3 rounded-md transition-all duration-300 hover:bg-red-600 hover:translate-x-2"
-              style={{
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "400",
-                background: "rgba(255, 255, 255, 0.05)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                cursor: "pointer",
-                letterSpacing: "0.2px",
-              }}
-            >
-              Sign Out
-            </button>
-          </div>
-        </nav>
-      </div>
-    </header>
+    </div>
   );
 };
 

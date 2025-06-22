@@ -96,8 +96,10 @@ const MainContainer = () => {
   }, [currentMovieIndex, isInitialLoad, imageLoaded]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Background Images with proper entrance animation */}
+    <div className="relative w-full h-screen overflow-hidden bg-black pt-20">
+      {" "}
+      {/* Added pt-20 for header space */}
+      {/* Background Images with entrance and transition animations */}
       <div className="absolute inset-0 z-0">
         <img
           key={currentMovieIndex}
@@ -138,8 +140,7 @@ const MainContainer = () => {
           }`}
         ></div>
       </div>
-
-      {/* Content with staggered entrance */}
+      {/* Synchronized Content with entrance animation */}
       <div className="relative z-10 h-full flex items-center">
         <div
           className={`px-6 sm:px-12 max-w-4xl transition-all duration-1400 ease-out transform ${
@@ -286,7 +287,6 @@ const MainContainer = () => {
           </div>
         </div>
       </div>
-
       {/* Navigation Dots */}
       <div
         className={`absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20 transition-all duration-1800 ease-out delay-1500 ${
@@ -312,7 +312,6 @@ const MainContainer = () => {
           </button>
         ))}
       </div>
-
       {/* Floating particles */}
       <div
         className={`absolute inset-0 pointer-events-none z-5 transition-opacity duration-2500 delay-2000 ${
