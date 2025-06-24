@@ -56,6 +56,14 @@ const Header = () => {
           block: "start",
         });
       }
+    } else if (section === "top-rated") {
+      const topRatedSection = document.getElementById("top-rated-section");
+      if (topRatedSection) {
+        topRatedSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
     } else if (section === "home") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -65,19 +73,26 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const trendingSection = document.getElementById("trending-section");
-      if (trendingSection) {
-        const rect = trendingSection.getBoundingClientRect();
-        const isInView = rect.top <= 100 && rect.bottom >= 100;
+      const topRatedSection = document.getElementById("top-rated-section");
 
-        if (isInView && activeSection !== "trending") {
+      if (
+        trendingSection &&
+        trendingSection.getBoundingClientRect().top <= 100 &&
+        trendingSection.getBoundingClientRect().bottom >= 100
+      ) {
+        if (activeSection !== "trending") {
           setActiveSection("trending");
-        } else if (
-          !isInView &&
-          window.scrollY < 500 &&
-          activeSection !== "home"
-        ) {
-          setActiveSection("home");
         }
+      } else if (
+        topRatedSection &&
+        topRatedSection.getBoundingClientRect().top <= 100 &&
+        topRatedSection.getBoundingClientRect().bottom >= 100
+      ) {
+        if (activeSection !== "top-rated") {
+          setActiveSection("top-rated");
+        }
+      } else if (window.scrollY < 500 && activeSection !== "home") {
+        setActiveSection("home");
       }
     };
 
@@ -119,7 +134,7 @@ const Header = () => {
                   onClick={() => handleNavigation("home")}
                   className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
                     activeSection === "home"
-                      ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                      ? "bg-white/20 text-white border border-white/30 shadow-lg hover:bg-white/30"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -129,27 +144,27 @@ const Header = () => {
                   onClick={() => handleNavigation("trending")}
                   className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
                     activeSection === "trending"
-                      ? "bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white border border-red-400/50 shadow-lg shadow-red-500/20"
+                      ? "bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white border border-red-400/50 shadow-lg shadow-red-500/20 hover:brightness-110"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   Trending
                 </button>
                 <button
-                  onClick={() => handleNavigation("movies")}
+                  onClick={() => handleNavigation("top-rated")}
                   className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
-                    activeSection === "movies"
-                      ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                    activeSection === "top-rated"
+                      ? "bg-gradient-to-r from-blue-500/80 to-cyan-500/80 text-white border border-blue-400/50 shadow-lg shadow-blue-500/20 hover:brightness-110"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
-                  Movies
+                  Top Rated
                 </button>
                 <button
                   onClick={() => handleNavigation("series")}
                   className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
                     activeSection === "series"
-                      ? "bg-white/20 text-white border border-white/30 shadow-lg"
+                      ? "bg-white/20 text-white border border-white/30 shadow-lg hover:bg-white/30"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -213,7 +228,7 @@ const Header = () => {
               onClick={() => handleNavigation("home")}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-base font-medium ${
                 activeSection === "home"
-                  ? "bg-white/20 text-white border border-white/30"
+                  ? "bg-white/20 text-white border border-white/30 hover:bg-white/30"
                   : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >
@@ -223,17 +238,27 @@ const Header = () => {
               onClick={() => handleNavigation("trending")}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-base font-medium ${
                 activeSection === "trending"
-                  ? "bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white border border-red-400/50"
+                  ? "bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white border border-red-400/50 hover:brightness-110"
                   : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >
               Trending
             </button>
             <button
+              onClick={() => handleNavigation("top-rated")}
+              className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-base font-medium ${
+                activeSection === "top-rated"
+                  ? "bg-gradient-to-r from-blue-500/80 to-cyan-500/80 text-white border border-blue-400/50 hover:brightness-110"
+                  : "text-white/70 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              Top Rated
+            </button>
+            <button
               onClick={() => handleNavigation("movies")}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-base font-medium ${
                 activeSection === "movies"
-                  ? "bg-white/20 text-white border border-white/30"
+                  ? "bg-white/20 text-white border border-white/30 hover:bg-white/30"
                   : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >
@@ -243,7 +268,7 @@ const Header = () => {
               onClick={() => handleNavigation("series")}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-base font-medium ${
                 activeSection === "series"
-                  ? "bg-white/20 text-white border border-white/30"
+                  ? "bg-white/20 text-white border border-white/30 hover:bg-white/30"
                   : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >

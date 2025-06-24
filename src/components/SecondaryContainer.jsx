@@ -50,11 +50,13 @@ const SecondaryContainer = () => {
         <div id="video-player-section">
           <VideoPlayer selectedMovieId={selectedMovieId} />
         </div>
-        <MovieList
-          title={"Top Rated Movies"}
-          movies={topRatedMovies}
-          onMovieClick={handleMovieClick}
-        />
+        <div id="top-rated-section">
+          <MovieList
+            title={"Top Rated Movies"}
+            movies={topRatedMovies}
+            onMovieClick={handleMovieClick}
+          />
+        </div>
         <MovieList
           title={"Popular"}
           movies={popularMovies}
