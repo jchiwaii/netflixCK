@@ -1,10 +1,13 @@
-// API Configuration
+// Check if Bearer token exists
+if (!import.meta.env.VITE_TMDB_BEARER_TOKEN) {
+  throw new Error("TMDB Bearer token not found in environment variables");
+}
+
 export const API_OPTIONS = {
   method: "GET",
   headers: {
     accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlYTNkYjkwNGE3MjJhZDllZGI5OWEyMGIzZTAyODE3OCIsIm5iZiI6MTc1MDQxOTc0Mi41NjMsInN1YiI6IjY4NTU0OTFlNjg4YmU1NjVhYzVkOGQ2NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UD1MClQpB1nzZD0UKvULtsO2ytKLVxJ3G5UbpMWLWNI",
+    Authorization: `Bearer ${import.meta.env.VITE_TMDB_BEARER_TOKEN}`,
   },
 };
 
