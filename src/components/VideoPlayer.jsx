@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import YouTube from "react-youtube";
+import { API_OPTIONS } from "../utils/Constants";
 
 const VideoPlayer = ({ selectedMovieId = null }) => {
   const { nowPlayingMovies, popularMovies } = useSelector(
@@ -44,13 +45,7 @@ const VideoPlayer = ({ selectedMovieId = null }) => {
       try {
         const response = await fetch(
           `https://api.themoviedb.org/3/movie/${currentMovie.id}/videos?language=en-US`,
-          {
-            method: "GET",
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
-            },
-          }
+          API_OPTIONS
         );
 
         if (!response.ok) throw new Error("Failed to fetch video");

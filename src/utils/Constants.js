@@ -1,13 +1,10 @@
-// Check if API key exists
-if (!import.meta.env.VITE_TMDB_API_KEY) {
-  throw new Error("TMDB API key not found in environment variables");
-}
-
+// API Configuration
 export const API_OPTIONS = {
   method: "GET",
   headers: {
     accept: "application/json",
-    Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlYTNkYjkwNGE3MjJhZDllZGI5OWEyMGIzZTAyODE3OCIsIm5iZiI6MTc1MDQxOTc0Mi41NjMsInN1YiI6IjY4NTU0OTFlNjg4YmU1NjVhYzVkOGQ2NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.UD1MClQpB1nzZD0UKvULtsO2ytKLVxJ3G5UbpMWLWNI",
   },
 };
 
