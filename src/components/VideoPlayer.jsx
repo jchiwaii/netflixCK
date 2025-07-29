@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import YouTube from "react-youtube";
 import { API_OPTIONS } from "../utils/Constants";
+import { logger } from "../utils/logger";
 
 const VideoPlayer = ({ selectedMovieId = null }) => {
   const { nowPlayingMovies, popularMovies } = useSelector(
@@ -68,7 +69,7 @@ const VideoPlayer = ({ selectedMovieId = null }) => {
           setError(true);
         }
       } catch (err) {
-        console.error("Error fetching trailer:", err);
+        logger.error("Error fetching trailer:", err);
         setError(true);
       } finally {
         setIsLoading(false);

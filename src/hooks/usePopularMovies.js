@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { API_OPTIONS } from "../utils/Constants";
 import { addPopularMovies } from "../utils/MoviesSlice";
+import { logger } from "../utils/logger";
 
 const usePopularMovies = () => {
   const dispatch = useDispatch();
@@ -12,10 +13,15 @@ const usePopularMovies = () => {
         "https://api.themoviedb.org/3/movie/popular?page=1",
         API_OPTIONS
       );
+
+      if (!data.ok) {
+        throw new Error(`HTTP error! status: ${data.status}`);
+      }
+
       const json = await data.json();
       dispatch(addPopularMovies(json.results));
     } catch (error) {
-      console.error("Failed to fetch popular movies:", error);
+      logger.error("Failed to fetch popular movies:", error);
     }
   };
 

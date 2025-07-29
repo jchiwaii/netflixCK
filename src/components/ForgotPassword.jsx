@@ -5,6 +5,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { logger } from "../utils/logger";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -46,24 +47,8 @@ const ForgotPassword = () => {
 
       setSuccess(true);
     } catch (error) {
-      console.error("Reset password error:", error);
-
-      switch (error.code) {
-        case "auth/invalid-email":
-          setError("Invalid email format");
-          break;
-        case "auth/user-not-found":
-          setError("No account found with this email");
-          break;
-        case "auth/too-many-requests":
-          setError("Too many attempts. Please try again later");
-          break;
-        case "auth/network-request-failed":
-          setError("Network error. Please check your connection");
-          break;
-        default:
-          setError("Failed to send reset email. Please try again");
-      }
+      setError(getErrorMessage(error.code));
+      logger.error("Reset password error:", error);
     } finally {
       setIsLoading(false);
     }

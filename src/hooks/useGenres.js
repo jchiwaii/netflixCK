@@ -1,37 +1,28 @@
-import { useDispatch, useSelector } from "react-redux";
-import { API_OPTIONS, GENRE_API } from "../utils/Constants";
-import { addGenres, setLoading, setError } from "../utils/MoviesSlice";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { API_OPTIONS, GENRE_API } from "../utils/Constants";
+import { addGenres } from "../utils/MoviesSlice";
+import { logger } from "../utils/logger";
 
 const useGenres = () => {
   const dispatch = useDispatch();
-  const genres = useSelector((store) => store.movies.genres);
 
   const getGenres = async () => {
     try {
-      dispatch(setLoading(true));
-      dispatch(setError(null));
-
-      const response = await fetch(GENRE_API, API_OPTIONS);
-      const json = await response.json();
-
+      const data = await fetch(GENRE_API, API_OPTIONS);
+      if (!data.ok) {
+        throw new Error(`HTTP error! status: ${data.status}`);
+      }
+      const json = await data.json();
       dispatch(addGenres(json.genres));
     } catch (error) {
-      dispatch(setError(error.message));
-      console.error("Error fetching genres:", error);
-    } finally {
-      dispatch(setLoading(false));
+      logger.error("Error fetching genres:", error);
     }
   };
 
   useEffect(() => {
-    // Only fetch if we don't already have the data
-    if (!genres) {
-      getGenres();
-    }
+    getGenres();
   }, []);
-
-  return genres;
 };
 
 export default useGenres;

@@ -11,6 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
+import { logger } from "../utils/logger";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -106,7 +107,7 @@ const Login = () => {
           email,
           password
         );
-        console.log("User created successfully:", userCredential.user);
+        logger.debug("User created successfully");
       } else {
         // Sign In
         const userCredential = await signInWithEmailAndPassword(
@@ -114,10 +115,10 @@ const Login = () => {
           email,
           password
         );
-        console.log("User signed in successfully:", userCredential.user);
+        logger.debug("User signed in successfully");
       }
     } catch (error) {
-      console.error("Authentication error:", error.code);
+      logger.error("Authentication error:", error);
 
       switch (error.code) {
         case "auth/email-already-in-use":
@@ -184,7 +185,7 @@ const Login = () => {
 
       navigate("/browse");
     } catch (error) {
-      console.error("Google Sign In Error:", error);
+      logger.error("Google Sign In Error:", error);
       setErrors((prev) => ({
         ...prev,
         email: error.message,
