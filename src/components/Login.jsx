@@ -12,14 +12,15 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/UserSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { logger } from "../utils/logger";
+import { TEST_USER } from "../utils/Constants";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState(true);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: TEST_USER.email,
+    password: TEST_USER.password,
     confirmPassword: "",
     fullName: "",
   });
@@ -195,12 +196,24 @@ const Login = () => {
 
   const toggleMode = () => {
     setIsSignIn(!isSignIn);
-    setFormData({
-      email: "",
-      password: "",
-      confirmPassword: "",
-      fullName: "",
-    });
+    // Pre-fill test credentials when switching to Sign In
+    if (isSignIn) {
+      // Switching to Sign Up - clear fields
+      setFormData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        fullName: "",
+      });
+    } else {
+      // Switching to Sign In - pre-fill test credentials
+      setFormData({
+        email: TEST_USER.email,
+        password: TEST_USER.password,
+        confirmPassword: "",
+        fullName: "",
+      });
+    }
     setFocusedField("");
     setErrors({
       email: "",

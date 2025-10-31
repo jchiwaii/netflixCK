@@ -25,3 +25,11 @@ export const getMovieImagesAPI = (movieId) =>
 // TMDB Image Base URLs
 export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500";
 export const IMG_CDN_URL_ORIGINAL = "https://image.tmdb.org/t/p/original";
+
+// Test User Credentials
+// Create this user in Firebase Authentication to enable test login
+export const TEST_USER = {
+  email: "testuser@netflixclone.com",
+  password: "Test@1234",
+  displayName: "Test User",
+};
