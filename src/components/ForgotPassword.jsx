@@ -55,7 +55,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+    <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#DC2626_100%)]">
       <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-sm sm:max-w-md">
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
@@ -95,7 +95,7 @@ const ForgotPassword = () => {
                     className="w-full px-0 py-2.5 sm:py-3.5 bg-transparent border-0 border-b border-white/30 transition-all duration-300 text-sm sm:text-base font-light text-white placeholder-white/50 focus:outline-none focus:border-white"
                     required
                   />
-                  <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 w-0 focus-within:w-full" />
+                  <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-500 to-red-600 transition-all duration-300 w-0 focus-within:w-full" />
                 </div>
 
                 {error && (
@@ -118,9 +118,9 @@ const ForgotPassword = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
+                  className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300" />
                   <span className="relative flex items-center justify-center">
                     {isLoading ? (
                       <>
@@ -146,9 +146,9 @@ const ForgotPassword = () => {
           </div>
 
           {/* Floating Elements */}
-          <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse" />
+          <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-full blur-xl animate-pulse" />
           <div
-            className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/10 to-blue-400/10 rounded-full blur-2xl animate-pulse"
+            className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-tr from-red-600/10 to-red-500/10 rounded-full blur-2xl animate-pulse"
             style={{ animationDelay: "1s" }}
           />
         </div>
