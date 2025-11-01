@@ -224,7 +224,7 @@ const Login = () => {
   };
 
   return (
-    <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+    <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#DC2626_100%)]">
       <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg">
           {/* Main Form Card */}
@@ -235,7 +235,7 @@ const Login = () => {
                 onClick={() => !isSignIn && toggleMode()}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   isSignIn
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg"
                     : "text-white/60 hover:text-white/80"
                 }`}
               >
@@ -245,7 +245,7 @@ const Login = () => {
                 onClick={() => isSignIn && toggleMode()}
                 className={`flex-1 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 ${
                   !isSignIn
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg"
                     : "text-white/60 hover:text-white/80"
                 }`}
               >
@@ -289,7 +289,7 @@ const Login = () => {
                     className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                       errors.fullName
                         ? "bg-gradient-to-r from-red-500 to-red-400"
-                        : "bg-gradient-to-r from-blue-400 to-purple-500"
+                        : "bg-gradient-to-r from-red-500 to-red-600"
                     } ${focusedField === "fullName" ? "w-full" : "w-0"}`}
                   ></div>
                   {errors.fullName && (
@@ -331,7 +331,7 @@ const Login = () => {
                   className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                     errors.email
                       ? ""
-                      : `bg-gradient-to-r from-blue-400 to-purple-500 ${
+                      : `bg-gradient-to-r from-red-500 to-red-600 ${
                           focusedField === "email" ? "w-full" : "w-0"
                         }`
                   }`}
@@ -376,7 +376,7 @@ const Login = () => {
                   className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                     errors.password
                       ? ""
-                      : `bg-gradient-to-r from-blue-400 to-purple-500 ${
+                      : `bg-gradient-to-r from-red-500 to-red-600 ${
                           focusedField === "password" ? "w-full" : "w-0"
                         }`
                   }`}
@@ -422,7 +422,7 @@ const Login = () => {
                     className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                       errors.confirmPassword
                         ? "bg-gradient-to-r from-red-500 to-red-400"
-                        : "bg-gradient-to-r from-blue-400 to-purple-500"
+                        : "bg-gradient-to-r from-red-500 to-red-600"
                     } ${focusedField === "confirmPassword" ? "w-full" : "w-0"}`}
                   ></div>
                   {errors.confirmPassword && (
@@ -448,10 +448,10 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
+                className="w-full mt-6 sm:mt-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden group text-xs sm:text-sm"
               >
                 {/* Button glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-xl sm:rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
 
                 <span className="relative flex items-center justify-center">
                   {isLoading ? (
@@ -550,9 +550,9 @@ const Login = () => {
           </div>
 
           {/* Floating Elements */}
-          <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-full blur-xl animate-pulse"></div>
           <div
-            className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/10 to-blue-400/10 rounded-full blur-2xl animate-pulse"
+            className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-tr from-red-600/10 to-red-500/10 rounded-full blur-2xl animate-pulse"
             style={{ animationDelay: "1s" }}
           ></div>
         </div>
